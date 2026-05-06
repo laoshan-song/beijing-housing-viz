@@ -4,26 +4,29 @@
 <meta charset="UTF-8">
 <title>北京房价交互可视化</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
   <div id="title-row">
-    <h1>北京二手房成交价格探索 <span id="year-range">2002–2018</span></h1>
+    <h1>北京二手房成交价格探索 <span class="sub">2002–2018</span></h1>
     <div id="stats-bar">
-      <span class="stat"><b id="s-count">—</b> 套</span>
+      <span class="stat">筛选结果 <b id="s-count">—</b> 套</span>
       <span class="stat">均价 <b id="s-avg">—</b> 元/㎡</span>
       <span class="stat">中位数 <b id="s-med">—</b> 元/㎡</span>
     </div>
   </div>
   <div id="controls">
     <div class="ctrl-group">
-      <label>价格区间</label>
-      <span id="price-min-val">5,000</span>
-      <input type="range" id="price-min" min="5000" max="150000" step="1000" value="5000">
-      <input type="range" id="price-max" min="5000" max="150000" step="1000" value="150000">
-      <span id="price-max-val">150,000</span>
-      <small>元/㎡</small>
+      <label>单价（元/㎡）</label>
+      <span id="price-display">5,000 – 150,000</span>
+      <div id="price-slider" class="range-slider"></div>
+    </div>
+    <div class="ctrl-group">
+      <label>面积（㎡）</label>
+      <span id="area-display">20 – 500</span>
+      <div id="area-slider" class="range-slider"></div>
     </div>
     <div class="ctrl-group">
       <label>装修</label>
@@ -35,34 +38,67 @@
         <option value="4">豪装</option>
       </select>
     </div>
-    <div class="ctrl-group">
+    <div class="ctrl-group checks">
       <label><input type="checkbox" id="subway-only"> 地铁旁</label>
       <label><input type="checkbox" id="elevator-only"> 有电梯</label>
     </div>
+    <button id="brush-btn" title="在地图上框选区域">框选</button>
     <button id="reset-btn">重置</button>
   </div>
 </header>
 
 <main>
+  <!-- 叙事面板 -->
+  <aside id="story-panel">
+    <div id="story-header">故事导览</div>
+    <div id="story-content">
+      <div class="step-indicator" id="step-indicator">1 / 4</div>
+      <h3 id="story-title"></h3>
+      <p id="story-text"></p>
+    </div>
+    <div id="story-nav">
+      <button id="prev-btn" disabled>← 上一步</button>
+      <button id="next-btn">下一步 →</button>
+    </div>
+    <div id="free-explore" style="display:none">
+      <div class="unlock-msg">🔓 现在，你可以自由探索了</div>
+    </div>
+  </aside>
+
+  <!-- 地图 -->
   <div id="map-wrap">
     <div id="map"></div>
     <div id="map-legend"></div>
-    <div id="tooltip"></div>
   </div>
+
+  <!-- 右侧图表 -->
   <div id="right-panel">
     <div id="bar-wrap">
-      <h2>各区平均单价 <small>点击筛选</small></h2>
+      <div id="bar-header">
+        <select id="metric-select">
+          <option value="" disabled selected>切换区域分析维度：</option>
+          <option value="avgPrice" selected>各区平均单价</option>
+          <option value="avgTotal">各区平均总价</option>
+          <option value="count">各区总挂牌房源数</option>
+          <option value="avgSquare">各区套均面积</option>
+          <option value="elevatorRate">各区电梯房普及率</option>
+          <option value="subwayRate">各区地铁房覆盖率</option>
+        </select>
+      </div>
       <svg id="bar"></svg>
     </div>
     <div id="trend-wrap">
-      <h2>月均价格趋势 <small id="brush-hint">拖拽选择时间段</small></h2>
+      <h2>月均价格趋势 <small>拖拽选择时间段</small></h2>
       <svg id="trend"></svg>
     </div>
   </div>
 </main>
 
+<div id="tooltip"></div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

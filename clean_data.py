@@ -28,6 +28,8 @@ with open('/home/laoshansong/price data/new.csv', encoding='gbk', errors='replac
                 'subway': int(float(row['subway'])) if row['subway'].strip() else 0,
                 'elevator': int(float(row['elevator'])) if row['elevator'].strip() else 0,
                 'renovation': int(float(row['renovationCondition'])) if row['renovationCondition'].strip() else 0,
+                'buildingType': int(float(bt)),
+                'builtYear': int(row['constructionTime'].strip()) if row['constructionTime'].strip().isdigit() else 0,
             })
         except (ValueError, KeyError):
             continue
