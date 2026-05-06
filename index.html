@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>北京房价交互可视化</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div id="title-row">
+    <h1>北京二手房成交价格探索 <span id="year-range">2002–2018</span></h1>
+    <div id="stats-bar">
+      <span class="stat"><b id="s-count">—</b> 套</span>
+      <span class="stat">均价 <b id="s-avg">—</b> 元/㎡</span>
+      <span class="stat">中位数 <b id="s-med">—</b> 元/㎡</span>
+    </div>
+  </div>
+  <div id="controls">
+    <div class="ctrl-group">
+      <label>价格区间</label>
+      <span id="price-min-val">5,000</span>
+      <input type="range" id="price-min" min="5000" max="150000" step="1000" value="5000">
+      <input type="range" id="price-max" min="5000" max="150000" step="1000" value="150000">
+      <span id="price-max-val">150,000</span>
+      <small>元/㎡</small>
+    </div>
+    <div class="ctrl-group">
+      <label>装修</label>
+      <select id="reno-filter">
+        <option value="0">全部</option>
+        <option value="1">毛坯</option>
+        <option value="2">简装</option>
+        <option value="3">精装</option>
+        <option value="4">豪装</option>
+      </select>
+    </div>
+    <div class="ctrl-group">
+      <label><input type="checkbox" id="subway-only"> 地铁旁</label>
+      <label><input type="checkbox" id="elevator-only"> 有电梯</label>
+    </div>
+    <button id="reset-btn">重置</button>
+  </div>
+</header>
+
+<main>
+  <div id="map-wrap">
+    <div id="map"></div>
+    <div id="map-legend"></div>
+    <div id="tooltip"></div>
+  </div>
+  <div id="right-panel">
+    <div id="bar-wrap">
+      <h2>各区平均单价 <small>点击筛选</small></h2>
+      <svg id="bar"></svg>
+    </div>
+    <div id="trend-wrap">
+      <h2>月均价格趋势 <small id="brush-hint">拖拽选择时间段</small></h2>
+      <svg id="trend"></svg>
+    </div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

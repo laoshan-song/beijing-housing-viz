@@ -1,0 +1,54 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #0f1117; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── header ── */
+header { background: #16213e; padding: 10px 16px; border-bottom: 1px solid #1a2a4a; flex-shrink: 0; }
+#title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+h1 { font-size: 16px; font-weight: 600; color: #e8eaf6; }
+h1 #year-range { font-size: 12px; color: #7986cb; font-weight: 400; margin-left: 8px; }
+#stats-bar { display: flex; gap: 20px; }
+.stat { font-size: 12px; color: #90a4ae; }
+.stat b { color: #ef5350; font-size: 14px; }
+
+#controls { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.ctrl-group { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #90a4ae; }
+.ctrl-group label { color: #b0bec5; white-space: nowrap; }
+.ctrl-group small { color: #607d8b; }
+input[type=range] { width: 90px; accent-color: #7986cb; cursor: pointer; }
+select { background: #1e2d4a; color: #cfd8dc; border: 1px solid #2a3f5f; border-radius: 4px; padding: 3px 6px; font-size: 12px; cursor: pointer; }
+input[type=checkbox] { accent-color: #7986cb; cursor: pointer; }
+#reset-btn { padding: 4px 14px; background: #ef5350; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-left: auto; }
+#reset-btn:hover { background: #c62828; }
+
+/* ── main layout ── */
+main { display: flex; flex: 1; gap: 6px; padding: 6px; overflow: hidden; }
+#map-wrap { flex: 1.5; position: relative; border-radius: 8px; overflow: hidden; }
+#map { width: 100%; height: 100%; }
+
+#right-panel { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+#bar-wrap, #trend-wrap { flex: 1; background: #16213e; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; min-height: 0; }
+h2 { font-size: 13px; color: #90a4ae; margin-bottom: 6px; flex-shrink: 0; }
+h2 small { font-size: 11px; color: #546e7a; margin-left: 6px; }
+#bar, #trend { flex: 1; width: 100%; min-height: 0; }
+
+/* ── tooltip ── */
+#tooltip { position: fixed; background: rgba(22,33,62,0.97); color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.12s; z-index: 9999; line-height: 1.7; border: 1px solid #2a3f5f; box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+
+/* ── map legend ── */
+#map-legend { position: absolute; bottom: 24px; right: 10px; background: rgba(22,33,62,0.92); border-radius: 6px; padding: 8px 10px; font-size: 11px; color: #90a4ae; z-index: 1000; border: 1px solid #2a3f5f; }
+#map-legend canvas { display: block; margin: 4px 0 2px; border-radius: 2px; }
+#map-legend .leg-row { display: flex; justify-content: space-between; }
+
+/* ── D3 chart styles ── */
+.axis text { fill: #607d8b; font-size: 10px; }
+.axis path, .axis line { stroke: #2a3f5f; }
+.bar-rect { cursor: pointer; transition: opacity 0.15s; }
+.bar-rect.selected { stroke: #fff; stroke-width: 1.5; }
+.bar-rect.dimmed { opacity: 0.2; }
+.trend-line { fill: none; stroke: #ef5350; stroke-width: 2; }
+.brush .selection { fill: #7986cb; fill-opacity: 0.25; stroke: #7986cb; stroke-width: 1; }
+.grid line { stroke: #1e2d4a; stroke-dasharray: 2,3; }
+
+/* ── leaflet overrides ── */
+.leaflet-control-attribution { font-size: 9px !important; background: rgba(0,0,0,0.5) !important; color: #607d8b !important; }
+.leaflet-control-attribution a { color: #7986cb !important; }
