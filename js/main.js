@@ -1,6 +1,6 @@
 const RENO = ['全部','毛坯','简装','简装','精装','豪装'];
 const BTYPE = {1:'板楼',2:'塔楼',3:'平房',4:'商住两用'};
-const colorScale = d3.scaleSequential(d3.interpolateYlOrRd).domain([10000, 100000]);
+const colorScale = d3.scaleSequential(d3.interpolatePlasma).domain([5000, 120000]);
 
 let allData = [];
 let state = {
@@ -50,9 +50,13 @@ function applyFilters(data, {skipDistrict=false, skipBrush=false}={}) {
 // ── stats ──────────────────────────────────────────────────────────────────
 function updateStats(data) {
   const prices = data.map(d=>d.price).sort(d3.ascending);
+  const areas = data.map(d=>d.square).sort(d3.ascending);
   d3.select('#s-count').text(data.length.toLocaleString());
   d3.select('#s-avg').text(data.length ? Math.round(d3.mean(prices)).toLocaleString() : '—');
   d3.select('#s-med').text(data.length ? Math.round(d3.quantile(prices,0.5)).toLocaleString() : '—');
+  d3.select('#s-max').text(data.length ? Math.round(d3.max(prices)).toLocaleString() : '—');
+  d3.select('#s-min').text(data.length ? Math.round(d3.min(prices)).toLocaleString() : '—');
+  d3.select('#s-avgArea').text(data.length ? Math.round(d3.mean(areas)).toLocaleString() : '—');
 }
 
 // ── LEAFLET MAP ────────────────────────────────────────────────────────────
@@ -323,8 +327,8 @@ function updateTrend() {
 let state_storyStep = 0;
 const STEPS = [
   {
-    title: '步骤 1：全局概览',
-    text: '北京的房价仅仅由"距离市中心的远近"决定吗？先看全景：红色为高价点，灰色为低价点。注意右侧图表，西城与东城的均价遥遥领先。',
+    title: '步骤 1/5：全局概览',
+    text: '北京房价由什么决定？先看全景：黄色为低价区，紫色为高价区。注意右侧图表，西城与东城的均价遥遥领先——但为什么？让我们深入探索。',
     action: () => {
       Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgPrice'});
       leafMap.setView([39.95,116.4], 10);
@@ -333,36 +337,48 @@ const STEPS = [
     }
   },
   {
-    title: '步骤 2：核心区悖论',
-    text: '高价等于高居住品质吗？聚焦西城与东城：地图上蓝色=有电梯，红色=无电梯。顶尖单价的深红色散点，竟大多是无电梯的老破小——学区和地段的价值完全碾压了物理居住品质。',
+    title: '步骤 2/5：核心区的"老破小"',
+    text: '西城与东城为何这么贵？聚焦这两个区：地图上的紫色点代表高价房源。但看右侧统计——这些高价房的平均面积只有 50-60 ㎡！这就是"老破小"：地段和学区价值完全碾压了物理居住品质。',
     action: () => {
-      Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'elevatorRate'});
-      state.storyStep = 2;
+      Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgSquare'});
+      state.storyStep = 1;
       leafMap.setView([39.91,116.38], 12);
-      d3.select('#metric-select').property('value','elevatorRate');
+      d3.select('#metric-select').property('value','avgSquare');
       resetControls();
     }
   },
   {
-    title: '步骤 3：近郊的生命线',
-    text: '将视线转移到五环外的大兴与房山。在近郊，临近地铁与配备电梯成为房价的生命线——两者兼具的房屋单价断层式领先于同区域其他房屋。',
+    title: '步骤 3/5：近郊的改善型住宅',
+    text: '将视线转移到五环外的大兴与房山。这里的故事截然不同：房源面积普遍 80-100 ㎡，电梯房比例高，但单价反而更低。这是"改善型住宅"——用更大的面积和更好的居住条件换取更低的总价。',
     action: () => {
-      Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'subwayRate'});
-      state.storyStep = 3;
-      leafMap.setView([39.78,116.3], 11);
-      d3.select('#metric-select').property('value','subwayRate');
+      Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgSquare'});
+      state.storyStep = 2;
+      leafMap.setView([39.75,116.25], 12);
+      d3.select('#metric-select').property('value','avgSquare');
       resetControls();
     }
   },
   {
-    title: '步骤 4：亦庄的独立行情',
-    text: '空间距离法则也有失效的时候。亦庄开发区虽处远郊，却因强劲的产业聚集效应，呈现出高电梯普及率、高地铁依赖与高单价并存的"独立行情"。现在，你可以自由探索了。',
+    title: '步骤 4/5：产业枢纽的溢价',
+    text: '然而，空间距离法则也有失效的时候。亦庄开发区虽然同处远郊，却因为强劲的产业聚集效应（国家级经济技术开发区），呈现出"高面积、高电梯普及率、高单价"并存的独特行情。这是产业驱动的房价溢价。',
     action: () => {
       Object.assign(state, {district:'亦庄', priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgPrice'});
-      state.storyStep = 4;
+      state.storyStep = 3;
       leafMap.setView([39.80,116.50], 12);
       d3.select('#metric-select').property('value','avgPrice');
       resetControls();
+    }
+  },
+  {
+    title: '步骤 5/5：自由探索',
+    text: '现在，你已经理解了北京房价的三大驱动力：地段/学区（核心区）、改善需求（近郊）、产业聚集（亦庄）。叙事导览已关闭，所有交互工具已解锁。尽情探索吧！',
+    action: () => {
+      Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgPrice'});
+      state.storyStep = 4;
+      leafMap.setView([39.95,116.4], 10);
+      d3.select('#metric-select').property('value','avgPrice');
+      resetControls();
+      document.getElementById('story-panel').style.display = 'none';
       document.getElementById('free-explore').style.display = 'block';
     }
   }
