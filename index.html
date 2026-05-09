@@ -104,17 +104,10 @@
     </div>
     <div id="trend-wrap">
       <div id="trend-header">
-        <div class="tab-row">
-          <button class="tab-btn active" data-tab="trend">价格趋势</button>
-          <button class="tab-btn" data-tab="scatter">价格×面积</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <small id="trend-hint">拖拽选择时间段</small>
-          <button class="panel-toggle" data-target="trend-wrap" title="折叠/展开">▼</button>
-        </div>
+        <h2>月均价格趋势 <small>拖拽选择时间段</small></h2>
+        <button class="panel-toggle" data-target="trend-wrap" title="折叠/展开">▼</button>
       </div>
-      <svg id="trend" class="tab-pane active"></svg>
-      <svg id="scatter-plot" class="tab-pane"></svg>
+      <svg id="trend"></svg>
     </div>
   </div>
 </main>

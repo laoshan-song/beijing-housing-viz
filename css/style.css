@@ -76,12 +76,9 @@ main { display: flex; flex: 1; gap: 6px; padding: 6px; overflow: hidden; }
 
 /* trend tabs */
 #trend-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; flex-shrink: 0; }
-.tab-row { display: flex; gap: 2px; background: #f0f2f5; border-radius: 6px; padding: 2px; }
-.tab-btn { padding: 3px 10px; font-size: 11px; border: none; border-radius: 4px; cursor: pointer; background: transparent; color: #888; transition: all 0.15s; }
-.tab-btn.active { background: #fff; color: #1a237e; font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-#trend-hint { font-size: 10px; color: #bbb; }
-.tab-pane { flex: 1; width: 100%; min-height: 0; display: none; overflow: visible; }
-.tab-pane.active { display: block; }
+#trend-header h2 { font-size: 13px; color: #555; }
+#trend-header h2 small { font-size: 11px; color: #aaa; margin-left: 6px; }
+#trend { flex: 1; width: 100%; min-height: 0; overflow: visible; }
 
 /* ── tooltip ── */
 #tooltip { position: fixed; background: rgba(26,35,126,0.96); color: #e8eaf6; padding: 9px 12px; border-radius: 7px; font-size: 12px; pointer-events: none; opacity: 0; transition: opacity 0.1s; z-index: 9999; line-height: 1.7; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 20px rgba(0,0,0,0.35); max-width: 230px; }

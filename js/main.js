@@ -1,7 +1,6 @@
 // ── constants & state ──────────────────────────────────────────────────────
 const RENO  = ['全部','毛坯','简装','简装','精装','豪装'];
 const BTYPE = {1:'板楼',2:'塔楼',3:'平房',4:'商住两用'};
-const DISTRICT_COLORS = d3.scaleOrdinal(d3.schemeTableau10);
 const colorScale = d3.scaleSequential(d3.interpolatePlasma).domain([120000, 5000]);
 
 let allData = [];
@@ -12,7 +11,6 @@ let state = {
   timeStart: null, timeEnd: null,
   brushBounds: null,
   metric: 'avgPrice',
-  activeTab: 'trend',
   storyStep: 0,
 };
 
@@ -391,51 +389,6 @@ function onTrendHover(e, tw, th) {
   showTip(e, `${closest.replace('-','年')}月<br>均价 <b>${Math.round(val).toLocaleString()}</b> 元/㎡`);
 }
 
-// ── SCATTER PLOT (price × area) ────────────────────────────────────────────
-const sm = {top:12, right:15, bottom:40, left:58};
-let scatterG;
-const scatterSvg = d3.select('#scatter-plot');
-
-function initScatter() {
-  scatterSvg.selectAll('*').remove();
-  const el = document.getElementById('scatter-plot');
-  const w = el.parentElement.clientWidth - 24;
-  const h = el.parentElement.clientHeight - 50;
-  if (w <= 0 || h <= 0) return;
-  scatterSvg.attr('viewBox', `0 0 ${w} ${h}`);
-  const sw = w-sm.left-sm.right, sh = h-sm.top-sm.bottom;
-  scatterG = scatterSvg.append('g').attr('transform',`translate(${sm.left},${sm.top})`);
-  scatterG.append('g').attr('class','x-axis axis').attr('transform',`translate(0,${sh})`);
-  scatterG.append('g').attr('class','y-axis axis');
-  scatterG.append('g').attr('class','grid');
-  scatterG.append('text').attr('x',sw/2).attr('y',sh+32).attr('text-anchor','middle')
-    .attr('font-size',10).attr('fill','#bbb').text('面积（㎡）');
-  scatterG.append('text').attr('transform','rotate(-90)').attr('x',-sh/2).attr('y',-46)
-    .attr('text-anchor','middle').attr('font-size',10).attr('fill','#bbb').text('单价（元/㎡）');
-}
-
-function updateScatter() {
-  if (state.activeTab !== 'scatter') return;
-  const el = document.getElementById('scatter-plot');
-  const w = el.parentElement.clientWidth-24, h = el.parentElement.clientHeight-50;
-  const sw = w-sm.left-sm.right, sh = h-sm.top-sm.bottom;
-  const data = applyFilters(allData);
-  const xS = d3.scaleLinear().domain([0, d3.quantile(data.map(d=>d.square).sort(d3.ascending), 0.98)]).range([0,sw]);
-  const yS = d3.scaleLinear().domain([0, d3.quantile(data.map(d=>d.price).sort(d3.ascending),  0.98)]).range([sh,0]);
-  scatterG.select('.x-axis').call(d3.axisBottom(xS).ticks(5).tickFormat(d=>d+'㎡'));
-  scatterG.select('.y-axis').call(d3.axisLeft(yS).ticks(4).tickFormat(d=>(d/1000).toFixed(0)+'k'));
-  scatterG.select('.grid').call(d3.axisLeft(yS).ticks(4).tickSize(-sw).tickFormat(''));
-  // sample for performance
-  const sample = data.length > 2000 ? data.filter((_,i)=>i%Math.ceil(data.length/2000)===0) : data;
-  scatterG.selectAll('.scatter-dot').data(sample, d=>d.lng+'_'+d.lat+'_'+d.price).join('circle')
-    .attr('class','scatter-dot')
-    .attr('cx', d=>xS(d.square)).attr('cy', d=>yS(d.price))
-    .attr('r', 3)
-    .attr('fill', d=>DISTRICT_COLORS(d.district))
-    .on('mouseover', (e,d) => showDotTip(e, d))
-    .on('mousemove', moveTip).on('mouseout', hideTip);
-}
-
 // ── NARRATIVE PANEL ────────────────────────────────────────────────────────
 let storyStep = 0;
 const STEPS = [
@@ -533,23 +486,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft'  && storyStep > 0)              goToStep(--storyStep);
 });
 
-// ── TAB SWITCHING ──────────────────────────────────────────────────────────
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-    btn.classList.add('active');
-    const tab = btn.dataset.tab;
-    state.activeTab = tab;
-    document.getElementById(tab === 'trend' ? 'trend' : 'scatter-plot').classList.add('active');
-    document.getElementById('trend-hint').style.display = tab === 'trend' ? '' : 'none';
-    if (tab === 'scatter') {
-      // recalculate scatter dimensions after element becomes visible
-      requestAnimationFrame(() => { initScatter(); updateScatter(); });
-    }
-  });
-});
-
 // ── PANEL COLLAPSE ─────────────────────────────────────────────────────────
 document.querySelectorAll('.panel-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -560,7 +496,7 @@ document.querySelectorAll('.panel-toggle').forEach(btn => {
 });
 
 // ── CONTROLS & INIT ────────────────────────────────────────────────────────
-function updateAll() { updateMapLayer(); updateBar(); updateTrend(); if (state.activeTab==='scatter') updateScatter(); }
+function updateAll() { updateMapLayer(); updateBar(); updateTrend(); }
 
 function resetControls() {
   priceSlider && priceSlider.set([state.priceMin, state.priceMax]);
@@ -608,11 +544,9 @@ d3.select('#reset-btn').on('click', () => {
 
 d3.json('data/housing.json').then(data => {
   allData = data;
-  DISTRICT_COLORS.domain([...new Set(data.map(d=>d.district))].sort());
   initSliders();
   initLeafletMap();
   initBar();
   initTrend();
-  initScatter();
   goToStep(0);
 });
