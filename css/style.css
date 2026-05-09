@@ -105,6 +105,19 @@ main { display: flex; flex: 1; gap: 6px; padding: 6px; overflow: hidden; }
 .scatter-dot { opacity: 0.55; transition: opacity 0.15s; }
 .scatter-dot:hover { opacity: 1; }
 
-/* ── leaflet ── */
+/* panel toggle */
+.panel-toggle { background: none; border: 1px solid #e0e0e0; border-radius: 4px; color: #aaa; font-size: 10px; cursor: pointer; padding: 2px 6px; line-height: 1; transition: all 0.15s; flex-shrink: 0; }
+.panel-toggle:hover { background: #f0f0f0; color: #555; }
+#bar-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-shrink: 0; }
+#metric-select { flex: 1; }
+#bar-wrap.collapsed, #trend-wrap.collapsed { flex: 0 0 auto; }
+#bar-wrap.collapsed svg, #trend-wrap.collapsed #trend-header > :not(.panel-toggle),
+#bar-wrap.collapsed #bar-header > :not(.panel-toggle) { }
+#bar-wrap.collapsed #bar, #trend-wrap.collapsed .tab-pane,
+#bar-wrap.collapsed .bar-label { display: none; }
+#trend-wrap.collapsed .tab-row, #trend-wrap.collapsed #trend-hint { display: none; }
+#bar-wrap.collapsed { min-height: 0; padding-bottom: 8px; }
+#trend-wrap.collapsed { min-height: 0; padding-bottom: 8px; }
+
 .leaflet-control-attribution { font-size: 9px !important; }
 .brush-cursor { cursor: crosshair !important; }

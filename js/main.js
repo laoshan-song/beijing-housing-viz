@@ -397,9 +397,12 @@ let scatterG;
 const scatterSvg = d3.select('#scatter-plot');
 
 function initScatter() {
+  scatterSvg.selectAll('*').remove();
   const el = document.getElementById('scatter-plot');
-  const w = el.parentElement.clientWidth-24, h = el.parentElement.clientHeight-50;
-  scatterSvg.attr('viewBox',`0 0 ${w} ${h}`);
+  const w = el.parentElement.clientWidth - 24;
+  const h = el.parentElement.clientHeight - 50;
+  if (w <= 0 || h <= 0) return;
+  scatterSvg.attr('viewBox', `0 0 ${w} ${h}`);
   const sw = w-sm.left-sm.right, sh = h-sm.top-sm.bottom;
   scatterG = scatterSvg.append('g').attr('transform',`translate(${sm.left},${sm.top})`);
   scatterG.append('g').attr('class','x-axis axis').attr('transform',`translate(0,${sh})`);
@@ -540,7 +543,19 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     state.activeTab = tab;
     document.getElementById(tab === 'trend' ? 'trend' : 'scatter-plot').classList.add('active');
     document.getElementById('trend-hint').style.display = tab === 'trend' ? '' : 'none';
-    if (tab === 'scatter') updateScatter();
+    if (tab === 'scatter') {
+      // recalculate scatter dimensions after element becomes visible
+      requestAnimationFrame(() => { initScatter(); updateScatter(); });
+    }
+  });
+});
+
+// ── PANEL COLLAPSE ─────────────────────────────────────────────────────────
+document.querySelectorAll('.panel-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const wrap = document.getElementById(btn.dataset.target);
+    const collapsed = wrap.classList.toggle('collapsed');
+    btn.textContent = collapsed ? '▶' : '▼';
   });
 });
 
