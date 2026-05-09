@@ -10,14 +10,16 @@
 <body>
 <header>
   <div id="title-row">
-    <h1>北京二手房成交价格探索 <span class="sub">2002–2018</span></h1>
+    <div>
+      <h1>北京二手房成交价格探索 <span class="sub">2002–2018 · 链家数据</span></h1>
+    </div>
     <div id="stats-bar">
-      <span class="stat">筛选结果 <b id="s-count">—</b> 套</span>
-      <span class="stat">均价 <b id="s-avg">—</b> 元/㎡</span>
-      <span class="stat">中位数 <b id="s-med">—</b> 元/㎡</span>
-      <span class="stat">最高 <b id="s-max">—</b> 元/㎡</span>
-      <span class="stat">最低 <b id="s-min">—</b> 元/㎡</span>
-      <span class="stat">均面积 <b id="s-avgArea">—</b> ㎡</span>
+      <div class="stat-card"><div class="stat-val" id="s-count">—</div><div class="stat-lbl">套数</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-avg">—</div><div class="stat-lbl">均价 元/㎡</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-med">—</div><div class="stat-lbl">中位数 元/㎡</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-max">—</div><div class="stat-lbl">最高 元/㎡</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-min">—</div><div class="stat-lbl">最低 元/㎡</div></div>
+      <div class="stat-card"><div class="stat-val" id="s-avgArea">—</div><div class="stat-lbl">均面积 ㎡</div></div>
     </div>
   </div>
   <div id="controls">
@@ -45,26 +47,35 @@
       <label><input type="checkbox" id="subway-only"> 地铁旁</label>
       <label><input type="checkbox" id="elevator-only"> 有电梯</label>
     </div>
-    <button id="brush-btn" title="在地图上框选区域">框选</button>
-    <button id="reset-btn">重置</button>
+    <button id="brush-btn" title="在地图上框选区域">⬚ 框选</button>
+    <button id="reset-btn">↺ 重置</button>
+    <button id="story-toggle-btn" style="display:none" title="重新打开叙事导览">📖 导览</button>
   </div>
 </header>
 
 <main>
   <!-- 叙事面板 -->
   <aside id="story-panel">
-    <div id="story-header">故事导览</div>
+    <div id="story-header">
+      <span>故事导览</span>
+      <button id="story-close-btn" title="关闭导览">✕</button>
+    </div>
     <div id="story-content">
-      <div class="step-indicator" id="step-indicator">1 / 5</div>
       <h3 id="story-title"></h3>
       <p id="story-text"></p>
+      <div id="story-insight"></div>
+    </div>
+    <div id="story-progress">
+      <span class="step-dot" data-step="0"></span>
+      <span class="step-dot" data-step="1"></span>
+      <span class="step-dot" data-step="2"></span>
+      <span class="step-dot" data-step="3"></span>
+      <span class="step-dot" data-step="4"></span>
     </div>
     <div id="story-nav">
       <button id="prev-btn" disabled>← 上一步</button>
+      <span id="step-indicator">1 / 5</span>
       <button id="next-btn">下一步 →</button>
-    </div>
-    <div id="free-explore" style="display:none">
-      <div class="unlock-msg">🔓 现在，你可以自由探索了</div>
     </div>
   </aside>
 
@@ -79,7 +90,7 @@
     <div id="bar-wrap">
       <div id="bar-header">
         <select id="metric-select">
-          <option value="" disabled selected>切换区域分析维度：</option>
+          <option value="" disabled>切换区域分析维度：</option>
           <option value="avgPrice" selected>各区平均单价</option>
           <option value="avgTotal">各区平均总价</option>
           <option value="count">各区总挂牌房源数</option>
@@ -91,8 +102,15 @@
       <svg id="bar"></svg>
     </div>
     <div id="trend-wrap">
-      <h2>月均价格趋势 <small>拖拽选择时间段</small></h2>
-      <svg id="trend"></svg>
+      <div id="trend-header">
+        <div class="tab-row">
+          <button class="tab-btn active" data-tab="trend">价格趋势</button>
+          <button class="tab-btn" data-tab="scatter">价格×面积</button>
+        </div>
+        <small id="trend-hint">拖拽选择时间段</small>
+      </div>
+      <svg id="trend" class="tab-pane active"></svg>
+      <svg id="scatter-plot" class="tab-pane"></svg>
     </div>
   </div>
 </main>
