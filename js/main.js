@@ -178,7 +178,7 @@ function buildLegend() {
   canvas.width = 120; canvas.height = 10;
   const ctx = canvas.getContext('2d');
   for (let i = 0; i < 120; i++) {
-    ctx.fillStyle = colorScale(120000 - i/120*115000);
+    ctx.fillStyle = colorScale(5000 + i/120*115000);
     ctx.fillRect(i, 0, 1, 10);
   }
   wrap.innerHTML = '<div style="font-size:11px;color:#666;margin-bottom:3px">单价（元/㎡）</div>';
