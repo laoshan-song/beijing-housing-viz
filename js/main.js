@@ -1,6 +1,6 @@
 const RENO = ['全部','毛坯','简装','简装','精装','豪装'];
 const BTYPE = {1:'板楼',2:'塔楼',3:'平房',4:'商住两用'};
-const colorScale = d3.scaleSequential(d3.interpolatePlasma).domain([5000, 120000]);
+const colorScale = d3.scaleSequential(d3.interpolatePlasma).domain([120000, 5000]);
 
 let allData = [];
 let state = {
@@ -179,14 +179,14 @@ function buildLegend() {
   canvas.width = 120; canvas.height = 10;
   const ctx = canvas.getContext('2d');
   for (let i = 0; i < 120; i++) {
-    ctx.fillStyle = colorScale(10000 + i/120*90000);
+    ctx.fillStyle = colorScale(120000 - i/120*115000);
     ctx.fillRect(i, 0, 1, 10);
   }
   wrap.innerHTML = '<div style="font-size:11px;color:#666;margin-bottom:3px">单价（元/㎡）</div>';
   wrap.appendChild(canvas);
   const row = document.createElement('div');
   row.className = 'leg-row';
-  row.innerHTML = '<span>1万</span><span>10万</span>';
+  row.innerHTML = '<span>低价</span><span>高价</span>';
   wrap.appendChild(row);
 }
 
