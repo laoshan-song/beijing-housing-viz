@@ -404,8 +404,8 @@ const STEPS = [
   },
   {
     title: '步骤 2/5：核心区的"老破小"',
-    text: '西城与东城为何这么贵？地图上紫色点代表高价房源。但看右侧柱状图——这些高价区的套均面积只有 50–60 ㎡！',
-    insight: '💡 <b>洞察：</b>核心区的价值来自学区和地段，而非居住品质。这就是"老破小"现象——小面积、无电梯，却因地段溢价而单价极高。',
+    text: '西城与东城为何这么贵？地图上紫色点代表高价房源。但看右侧柱状图——这些高价区的套均面积只有 60–80 ㎡！',
+    insight: '💡 <b>洞察：</b>核心区的价值大多来自地段，而非完全取决于居住品质。这就是"老破小"现象——小面积、无电梯，却因地段溢价而单价极高。',
     action: () => {
       Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgSquare'});
       leafMap.setView([39.91,116.38], 12);
@@ -414,8 +414,8 @@ const STEPS = [
   },
   {
     title: '步骤 3/5：近郊的改善型住宅',
-    text: '将视线转移到五环外的大兴与房山。这里面积普遍 80–100 ㎡，电梯房比例高，但单价反而更低。',
-    insight: '💡 <b>洞察：</b>近郊是"改善型住宅"的主战场——用更大的面积和更好的配套，换取更低的总价门槛。',
+    text: '将视线转移到五环外的大兴与房山。这里面积普遍 88–100 ㎡，电梯房比例高，但单价反而更低。',
+    insight: '💡 <b>洞察：</b>近郊是"改善型住宅"的主战场——有更大的面积和更好的配套。',
     action: () => {
       Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgSquare'});
       leafMap.setView([39.75,116.25], 12);
@@ -423,19 +423,9 @@ const STEPS = [
     }
   },
   {
-    title: '步骤 4/5：产业枢纽的溢价',
-    text: '亦庄开发区虽处远郊，却因国家级产业聚集效应，呈现出高面积、高电梯率、高单价并存的独特行情。',
-    insight: '💡 <b>洞察：</b>产业驱动的房价溢价可以突破空间距离法则。亦庄的均价显著高于同圈层的大兴和房山。',
-    action: () => {
-      Object.assign(state, {district:'亦庄', priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgPrice'});
-      leafMap.setView([39.80,116.50], 12);
-      d3.select('#metric-select').property('value','avgPrice');
-    }
-  },
-  {
-    title: '步骤 5/5：自由探索',
-    text: '三大驱动力：地段/学区（核心区）、改善需求（近郊）、产业聚集（亦庄）。导览结束，所有工具已解锁。',
-    insight: '🔓 <b>提示：</b>试试"价格×面积"散点图，直观看出各区"老破小"与"改善型"的分布差异。',
+    title: '步骤 4/5：自由探索',
+    text: '两大驱动力：地段（核心区）、改善需求（近郊）。导览结束，所有工具已解锁。',
+    insight: null,
     action: () => {
       Object.assign(state, {district:null, priceMin:5000, priceMax:150000, areaMin:20, areaMax:500, subway:false, elevator:false, renovation:0, timeStart:null, timeEnd:null, brushBounds:null, metric:'avgPrice'});
       leafMap.setView([39.95,116.4], 10);
