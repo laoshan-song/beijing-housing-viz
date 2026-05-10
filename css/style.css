@@ -97,8 +97,6 @@ main { display: flex; flex: 1; gap: 6px; padding: 6px; overflow: hidden; }
 .trend-line-all { stroke: #ccc; stroke-width: 1.5; stroke-dasharray: 4,3; }
 .crosshair-line { stroke: #999; stroke-width: 1; stroke-dasharray: 3,3; pointer-events: none; }
 .crosshair-dot { fill: #e53935; stroke: #fff; stroke-width: 2; pointer-events: none; }
-.annotation-line { stroke: #ff7043; stroke-width: 1; stroke-dasharray: 4,3; }
-.annotation-label { font-size: 9px; fill: #ff7043; }
 .brush .selection { fill: #3949ab; fill-opacity: 0.12; stroke: #3949ab; stroke-width: 1; }
 .scatter-dot { opacity: 0.55; transition: opacity 0.15s; }
 .scatter-dot:hover { opacity: 1; }

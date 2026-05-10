@@ -300,9 +300,6 @@ function initTrend() {
   trendG.append('path').attr('class','trend-line').attr('stroke','#e53935');
   trendG.append('line').attr('class','crosshair-line').attr('y1',0).attr('y2',th).style('opacity',0);
   trendG.append('circle').attr('class','crosshair-dot').attr('r',4).style('opacity',0);
-  // annotation: 2016-03 price peak
-  trendG.append('line').attr('class','annotation-line').style('opacity',0).attr('id','ann-line');
-  trendG.append('text').attr('class','annotation-label').attr('id','ann-label').style('opacity',0);
   brushObj = d3.brushX().extent([[0,0],[tw,th]]).on('end', e => {
     if (!e.selection) { state.timeStart=null; state.timeEnd=null; }
     else {
@@ -357,17 +354,6 @@ function updateTrend() {
     .attr('fill', state.district ? '#e53935' : '#3949ab').attr('opacity',0.7)
     .on('mouseover',(e,d)=>{ showTip(e,`${d3.timeFormat('%Y年%m月')(d.t)}<br>均价 ${Math.round(d.v).toLocaleString()} 元/㎡`); })
     .on('mousemove',moveTip).on('mouseout',hideTip);
-
-  // 2016-03 annotation
-  const peakDate = d3.timeParse('%Y-%m')('2016-03');
-  if (xT.domain()[0] <= peakDate && peakDate <= xT.domain()[1]) {
-    const px = xT(peakDate);
-    trendG.select('#ann-line').attr('x1',px).attr('x2',px).attr('y1',0).attr('y2',th).style('opacity',1);
-    trendG.select('#ann-label').attr('x',px+3).attr('y',10).text('2016年高峰').style('opacity',1);
-  } else {
-    trendG.select('#ann-line').style('opacity',0);
-    trendG.select('#ann-label').style('opacity',0);
-  }
 }
 
 function onTrendHover(e, tw, th) {
