@@ -1,9 +1,14 @@
 # 北京二手房成交价格交互可视化
 
 **作业 3：交互式可视化**  
-数据可视化课程 · 2026 春季学期
+数据可视化课程 · 2026 春季学期    
+小组成员：   
+- 陈飞涵   2024202845   
+- 宋文韬   2024201470     
+- 颜韬   2024201434
 
-🔗 **在线访问：** https://laoshan-song.github.io/beijing-housing-viz/
+
+🔗 **在线访问：** https://laoshan-song.github.io/beijing-housing-viz/        
 🔗 **Github仓库：** https://github.com/laoshan-song/beijing-housing-viz
 
 ---
